@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -252,6 +253,9 @@ export default function Home() {
           <a href="#culture" onClick={closeMobileMenu}>
             Culture
           </a>
+          <Link href="/calendar" onClick={closeMobileMenu}>
+            Calendar
+          </Link>
           <a href="#about" onClick={closeMobileMenu}>
             About
           </a>
@@ -766,7 +770,7 @@ export default function Home() {
 
           <div className="footer-column">
             <h4>DISCOVER</h4>
-            <a href="#festivals">Festival calendar</a>
+            <Link href="/calendar">Festival calendar</Link>
             <a href="#culture">Traditions</a>
             <a href="#stories">Food & stories</a>
           </div>
@@ -776,6 +780,7 @@ export default function Home() {
             <a href="#about">Our story</a>
             <a href="#about">Newsletter</a>
             <a href="#home">Back to top ↑</a>
+            
           </div>
         </div>
 
