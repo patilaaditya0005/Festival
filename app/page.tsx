@@ -1,3 +1,5 @@
+/*polishing the frontend 
+*/
 "use client";
 import Link from "next/link";
 /* updating the existing feature with new code */
