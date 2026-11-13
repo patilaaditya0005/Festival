@@ -1,0 +1,517 @@
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap");
+
+.festival-detail-page {
+  --detail-ink: #242019;
+  --detail-muted: #777166;
+  --detail-accent: #c77d42;
+  --detail-cream: #faf7f1;
+  background: var(--detail-cream);
+  color: var(--detail-ink);
+  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+}
+
+.detail-navbar {
+  min-height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: #fffdf9;
+  border-bottom: 1px solid #eee7dc;
+}
+
+.detail-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--detail-ink);
+  text-decoration: none;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.detail-brand svg {
+  color: var(--detail-accent);
+}
+
+.detail-brand span {
+  color: var(--detail-accent);
+  margin-left: -8px;
+}
+
+.detail-nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.detail-nav-links a,
+.detail-back-link {
+  color: #625d53;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.detail-nav-links a:hover,
+.detail-back-link:hover {
+  color: var(--detail-accent);
+}
+
+.detail-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-hero {
+  min-height: 590px;
+  position: relative;
+  display: flex;
+  align-items: end;
+  padding: 90px 9%;
+  background-size: cover;
+  background-position: center;
+  isolation: isolate;
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(20, 17, 14, 0.86),
+    rgba(20, 17, 14, 0.48) 55%,
+    rgba(20, 17, 14, 0.12)
+  );
+}
+
+.detail-hero-content {
+  max-width: 850px;
+  color: white;
+}
+
+.detail-eyebrow,
+.detail-section-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+}
+
+.detail-eyebrow {
+  color: #f2c18d;
+}
+
+.detail-eyebrow span {
+  padding: 0 8px;
+}
+
+.detail-hero h1 {
+  margin: 22px 0 8px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(54px, 8vw, 100px);
+  line-height: 1.04;
+  font-weight: 600;
+}
+
+.detail-hero-content > p {
+  margin: 0;
+  color: #f2e8dc;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(20px, 3vw, 30px);
+}
+
+.detail-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 34px;
+}
+
+.detail-hero-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #f8eee3;
+  font-size: 13px;
+}
+
+.detail-hero-meta svg {
+  color: #efbd83;
+}
+
+.detail-container {
+  width: min(1120px, 86%);
+  margin: 0 auto;
+}
+
+.detail-intro {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 70px;
+  align-items: center;
+  padding-top: 105px;
+  padding-bottom: 85px;
+}
+
+.detail-section-label {
+  color: var(--detail-accent);
+}
+
+.detail-intro h2,
+.detail-section-heading h2,
+.detail-story-card h2 {
+  margin: 15px 0 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.16;
+  font-weight: 600;
+}
+
+.detail-intro > p,
+.detail-story-card > p {
+  color: var(--detail-muted);
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.detail-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  padding-bottom: 105px;
+}
+
+.detail-story-card {
+  padding: 42px;
+  border: 1px solid #eae2d6;
+  border-radius: 18px;
+  background: #fffdf9;
+}
+
+.detail-story-card h2 {
+  font-size: 32px;
+}
+
+.detail-highlight-card {
+  background: #302a22;
+  border-color: #302a22;
+  color: white;
+}
+
+.detail-highlight-card .detail-section-label {
+  color: #efbd83;
+}
+
+.detail-highlight-card > p {
+  color: #e1d8ca;
+}
+
+.detail-traditions {
+  padding: 85px 0 105px;
+  border-top: 1px solid #e9e1d5;
+}
+
+.detail-section-heading {
+  max-width: 650px;
+  margin-bottom: 38px;
+}
+
+.detail-section-heading h2 {
+  margin-top: 14px;
+}
+
+.detail-section-heading > p {
+  color: var(--detail-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.detail-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.detail-list-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 23px;
+  border-radius: 13px;
+  background: #fffdf9;
+  border: 1px solid #eee6da;
+}
+
+.detail-list-card > span {
+  color: var(--detail-accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.detail-list-card p {
+  margin: 0;
+  color: #514b41;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.detail-lifestyle {
+  padding: 85px 0 105px;
+  border-top: 1px solid #e9e1d5;
+}
+
+.detail-lifestyle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.detail-lifestyle-card {
+  padding: 30px;
+  border: 1px solid #eae2d6;
+  border-radius: 16px;
+  background: #fffdf9;
+}
+
+.detail-icon {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #f4e8d8;
+  font-size: 24px;
+}
+
+.detail-lifestyle-card h3 {
+  margin: 20px 0 8px;
+  font-family: "Playfair Display", serif;
+  font-size: 23px;
+}
+
+.detail-lifestyle-card > p {
+  min-height: 48px;
+  color: var(--detail-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.detail-lifestyle-card ul {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail-lifestyle-card li {
+  position: relative;
+  padding-left: 17px;
+  color: #514b41;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.detail-lifestyle-card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--detail-accent);
+}
+
+.detail-related {
+  padding: 80px 0 100px;
+  border-top: 1px solid #e9e1d5;
+}
+
+.detail-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.detail-related-card {
+  position: relative;
+  padding: 25px;
+  border: 1px solid #eae2d6;
+  border-radius: 15px;
+  background: #fffdf9;
+  color: var(--detail-ink);
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.detail-related-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 35px rgba(50, 38, 22, 0.08);
+}
+
+.detail-related-card > span {
+  display: inline-flex;
+  color: var(--detail-accent);
+}
+
+.detail-related-card h3 {
+  margin: 17px 0 6px;
+  font-family: "Playfair Display", serif;
+  font-size: 23px;
+}
+
+.detail-related-card p {
+  color: var(--detail-muted);
+  font-size: 12px;
+}
+
+.detail-related-card > svg {
+  position: absolute;
+  right: 23px;
+  bottom: 25px;
+  color: var(--detail-accent);
+}
+
+.detail-footer {
+  min-height: 110px;
+  padding: 25px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #29251f;
+  color: white;
+}
+
+.detail-footer .detail-brand {
+  color: white;
+}
+
+.detail-footer > p {
+  color: #c8bfb2;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.detail-footer > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #efbd83;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+@media (max-width: 800px) {
+  .detail-navbar {
+    padding: 0 5%;
+  }
+
+  .detail-nav-links {
+    gap: 15px;
+  }
+
+  .detail-hero {
+    min-height: 500px;
+    padding: 70px 7%;
+  }
+
+  .detail-intro {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding-top: 75px;
+    padding-bottom: 65px;
+  }
+
+  .detail-story {
+    grid-template-columns: 1fr;
+    padding-bottom: 75px;
+  }
+
+  .detail-lifestyle-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .detail-related-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .detail-footer {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 540px) {
+  .detail-navbar {
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .detail-brand {
+    font-size: 17px;
+  }
+
+  .detail-nav-links {
+    display: none;
+  }
+
+  .detail-back-link {
+    font-size: 12px;
+  }
+
+  .detail-hero {
+    min-height: 460px;
+    padding: 55px 6%;
+  }
+
+  .detail-hero h1 {
+    font-size: 54px;
+  }
+
+  .detail-hero-meta {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detail-container {
+    width: 88%;
+  }
+
+  .detail-intro h2,
+  .detail-section-heading h2 {
+    font-size: 34px;
+  }
+
+  .detail-story-card {
+    padding: 28px;
+  }
+
+  .detail-list-grid,
+  .detail-lifestyle-grid,
+  .detail-related-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-traditions,
+  .detail-lifestyle,
+  .detail-related {
+    padding-top: 65px;
+    padding-bottom: 70px;
+  }
+
+  .detail-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 30px 6%;
+  }
+}

@@ -513,13 +513,13 @@ export default function Home() {
                     {festival.location}
                   </span>
 
-                  <button
-                    className="card-arrow"
-                    onClick={() => setSelectedFestival(festival)}
-                    aria-label={`View ${festival.name}`}
-                  >
-                    <ArrowUpRight size={18} />
-                  </button>
+                 <Link
+  href={`/festivals/${festival.name.toLowerCase().replace(/\s+/g, "-")}`}
+  className="card-arrow"
+  aria-label={`Explore ${festival.name}`}
+>
+  <ArrowUpRight size={18} />
+</Link>
                 </div>
               </div>
             </article>
