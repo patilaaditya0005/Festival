@@ -18,3 +18,6 @@ export default function RootLayout({
     </html>
   );
 }
+
+/*so this is the description of app and the name of app
+ */
