@@ -1,885 +1,844 @@
-/*polishing the frontend 
-*/
+
 "use client";
-import Link from "next/link";
-/* updating the existing feature with new code */
+
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowDownRight,
-  ArrowRight,
-  ArrowUpRight,
-  Bookmark,
-  CalendarDays,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Clock3,
-  Compass,
-  Heart,
-  Menu,
-  Music2,
-  Search,
-  Sparkles,
-  X,
-} from "lucide-react";
 
 type Festival = {
   id: number;
   name: string;
-  subtitle: string;
-  date: string;
-  month: string;
   category: string;
-  location: string;
-  duration: string;
+  region: string;
+  season: string;
   description: string;
-  image: string;
+  traditions: string[];
   color: string;
-  tag: string;
+  emoji: string;
 };
+
+type View =
+  | "home"
+  | "festivals"
+  | "calendar"
+  | "login"
+  | "signup"
+  | "dashboard"
+  | "admin";
 
 const festivals: Festival[] = [
   {
     id: 1,
     name: "Diwali",
-    subtitle: "The Festival of Lights",
-    date: "November 8",
-    month: "November",
-    category: "Tradition",
-    location: "Across India",
-    duration: "5 days",
+    category: "Light",
+    region: "All India",
+    season: "October – November",
     description:
-      "A celebration of light over darkness, good over evil, and hope over despair. Homes glow with diyas, streets sparkle, and families come together.",
-    image:
-      "https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=1200&q=85",
-    color: "#e7a84b",
-    tag: "MOST CELEBRATED",
+      "The festival of lights celebrates the victory of light over darkness and good over evil. Homes are decorated with lamps, rangoli and lights.",
+    traditions: ["Lighting diyas", "Rangoli", "Family gatherings", "Sweets and gifts"],
+    color: "orange",
+    emoji: "🪔",
   },
   {
     id: 2,
     name: "Holi",
-    subtitle: "The Festival of Colors",
-    date: "March 4",
-    month: "March",
-    category: "Culture",
-    location: "Across India",
-    duration: "2 days",
+    category: "Cultural",
+    region: "North India",
+    season: "February – March",
     description:
-      "A vibrant celebration of spring, friendship, and new beginnings. Colors fill the air as communities come together in joy.",
-    image:
-      "https://images.unsplash.com/photo-1612534847738-b3af9bc31f0c?auto=format&fit=crop&w=1200&q=85",
-    color: "#f17d65",
-    tag: "COLOR & JOY",
+      "Holi welcomes spring with colours, music and joyful gatherings. It celebrates love, togetherness and the triumph of good.",
+    traditions: ["Playing with colours", "Holika Dahan", "Music and dance", "Gujiya"],
+    color: "pink",
+    emoji: "🎨",
   },
   {
     id: 3,
     name: "Ganesh Chaturthi",
-    subtitle: "The Arrival of Bappa",
-    date: "September 14",
-    month: "September",
-    category: "Devotion",
-    location: "Maharashtra",
-    duration: "10 days",
+    category: "Religious",
+    region: "Maharashtra",
+    season: "August – September",
     description:
-      "Welcoming Lord Ganesha with devotion, music, grand pandals, and heartfelt celebrations that bring entire neighborhoods together.",
-    image:
-      "https://images.unsplash.com/photo-1567591414240-e1c7f859cdd3?auto=format&fit=crop&w=1200&q=85",
-    color: "#e99b42",
-    tag: "COMMUNITY SPIRIT",
+      "A celebration honouring Lord Ganesha, known for community celebrations, beautifully decorated pandals and devotional music.",
+    traditions: ["Ganesh sthapana", "Aarti", "Modak", "Visarjan"],
+    color: "yellow",
+    emoji: "🐘",
   },
   {
     id: 4,
     name: "Navratri",
-    subtitle: "Nine Nights of Celebration",
-    date: "October 11",
-    month: "October",
-    category: "Culture",
-    location: "Gujarat & Across India",
-    duration: "9 nights",
+    category: "Cultural",
+    region: "Gujarat and All India",
+    season: "September – October",
     description:
-      "Nine nights dedicated to devotion, dance, and divine feminine energy. Garba and Dandiya bring people together after sunset.",
-    image:
-      "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=85",
-    color: "#d97c55",
-    tag: "DANCE & DEVOTION",
+      "Nine nights dedicated to the divine feminine, celebrated through devotion, traditional outfits, Garba and Dandiya.",
+    traditions: ["Garba", "Dandiya", "Fasting", "Durga Puja"],
+    color: "purple",
+    emoji: "💃",
   },
   {
     id: 5,
     name: "Onam",
-    subtitle: "A Harvest of Happiness",
-    date: "August 26",
-    month: "August",
-    category: "Tradition",
-    location: "Kerala",
-    duration: "10 days",
+    category: "Harvest",
+    region: "Kerala",
+    season: "August – September",
     description:
-      "Kerala's beautiful harvest festival filled with floral carpets, traditional feasts, boat races, and the legendary homecoming of King Mahabali.",
-    image:
-      "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1200&q=85",
-    color: "#76a783",
-    tag: "HARVEST FESTIVAL",
+      "Kerala's harvest festival celebrates the legendary King Mahabali with floral decorations, traditional feasts and cultural events.",
+    traditions: ["Pookalam", "Onam Sadya", "Vallam Kali", "Pulikali"],
+    color: "green",
+    emoji: "🌼",
   },
   {
     id: 6,
     name: "Pongal",
-    subtitle: "Celebrating the Harvest",
-    date: "January 14",
-    month: "January",
-    category: "Tradition",
-    location: "Tamil Nadu",
-    duration: "4 days",
+    category: "Harvest",
+    region: "Tamil Nadu",
+    season: "January",
     description:
-      "A heartfelt thanksgiving to the Sun, nature, and farmers. Families prepare sweet Pongal and decorate their homes with kolam.",
-    image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=1200&q=85",
-    color: "#d9a14c",
-    tag: "HARVEST & GRATITUDE",
+      "A multi-day harvest festival thanking the Sun, nature and cattle for their role in agriculture and everyday life.",
+    traditions: ["Pongal dish", "Kolam", "Mattu Pongal", "Family celebrations"],
+    color: "green",
+    emoji: "🌾",
+  },
+  {
+    id: 7,
+    name: "Durga Puja",
+    category: "Religious",
+    region: "West Bengal",
+    season: "September – October",
+    description:
+      "A major celebration honouring Goddess Durga, known for artistic pandals, cultural programmes and community gatherings.",
+    traditions: ["Pandal hopping", "Pushpanjali", "Dhak", "Sindoor Khela"],
+    color: "red",
+    emoji: "🙏",
+  },
+  {
+    id: 8,
+    name: "Baisakhi",
+    category: "Harvest",
+    region: "Punjab",
+    season: "April",
+    description:
+      "A harvest celebration in Punjab that also holds great significance in Sikh history and is marked by music and community events.",
+    traditions: ["Bhangra", "Giddha", "Gurudwara visits", "Community meals"],
+    color: "yellow",
+    emoji: "🌻",
+  },
+  {
+    id: 9,
+    name: "Janmashtami",
+    category: "Religious",
+    region: "All India",
+    season: "August",
+    description:
+      "Celebrates the birth of Lord Krishna through devotional songs, prayers, decorations and cultural performances.",
+    traditions: ["Midnight prayers", "Bhajans", "Dahi Handi", "Jhanki"],
+    color: "blue",
+    emoji: "🦚",
+  },
+  {
+    id: 10,
+    name: "Makar Sankranti",
+    category: "Harvest",
+    region: "All India",
+    season: "January",
+    description:
+      "A harvest festival marking the Sun's transition into Capricorn, celebrated in different ways across India.",
+    traditions: ["Kite flying", "Til-gul", "Bonfires", "Traditional food"],
+    color: "orange",
+    emoji: "🪁",
+  },
+  {
+    id: 11,
+    name: "Raksha Bandhan",
+    category: "Cultural",
+    region: "All India",
+    season: "July – August",
+    description:
+      "A celebration of the bond between siblings, marked by the tying of a rakhi and exchanging wishes and gifts.",
+    traditions: ["Rakhi tying", "Family gatherings", "Sweets", "Gifts"],
+    color: "pink",
+    emoji: "🎀",
+  },
+  {
+    id: 12,
+    name: "Christmas",
+    category: "Cultural",
+    region: "All India",
+    season: "December",
+    description:
+      "Celebrates the birth of Jesus Christ with prayers, carols, decorated trees and gatherings with family and friends.",
+    traditions: ["Christmas tree", "Carols", "Midnight mass", "Gift exchange"],
+    color: "green",
+    emoji: "🎄",
   },
 ];
 
-const categories = ["All", "Tradition", "Culture", "Devotion"];
-
-const stories = [
-  {
-    number: "01",
-    category: "CULTURE",
-    title: "Why every Indian festival tells a story",
-    text: "Discover the traditions, legends, and values that make every celebration meaningful.",
-    image:
-      "https://images.unsplash.com/photo-1604608672516-8a4f5c7d9b0e?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    number: "02",
-    category: "FOOD",
-    title: "A feast of flavors and memories",
-    text: "From modaks to mithai, explore the food that makes celebrations unforgettable.",
-    image:
-      "https://images.unsplash.com/photo-1605197161470-5d9a5c8d1d5c?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    number: "03",
-    category: "TRADITIONS",
-    title: "The beauty of rituals passed down",
-    text: "The little customs that connect generations and keep our heritage alive.",
-    image:
-      "https://images.unsplash.com/photo-1606293926075-69a00dbabl?auto=format&fit=crop&w=1000&q=85",
-  },
-];
+const categories = ["All", "Religious", "Cultural", "Harvest", "Light"];
 
 export default function Home() {
+  const [view, setView] = useState<View>("home");
+  const [selected, setSelected] = useState<Festival | null>(null);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-  const [month, setMonth] = useState("All months");
-  const [saved, setSaved] = useState<number[]>([]);
-  const [showSaved, setShowSaved] = useState(false);
-  const [selectedFestival, setSelectedFestival] =
-    useState<Festival | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("festora-saved");
-      if (stored) setSaved(JSON.parse(stored));
+      const saved = localStorage.getItem("festora-favorites");
+      if (saved) setFavorites(JSON.parse(saved));
     } catch {
-      setSaved([]);
+      setFavorites([]);
     }
   }, []);
 
-  const toggleSaved = (id: number) => {
-    setSaved((previous) => {
-      const updated = previous.includes(id)
-        ? previous.filter((item) => item !== id)
-        : [...previous, id];
+  function toggleFavorite(id: number) {
+    setFavorites((current) => {
+      const updated = current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id];
 
-      localStorage.setItem("festora-saved", JSON.stringify(updated));
+      localStorage.setItem("festora-favorites", JSON.stringify(updated));
       return updated;
     });
-  };
+  }
+
+  function navigate(next: View) {
+    setView(next);
+    setSelected(null);
+    setMobileMenu(false);
+    setNotice("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   const filteredFestivals = useMemo(() => {
     return festivals.filter((festival) => {
       const matchesSearch =
         festival.name.toLowerCase().includes(search.toLowerCase()) ||
-        festival.subtitle.toLowerCase().includes(search.toLowerCase()) ||
-        festival.location.toLowerCase().includes(search.toLowerCase());
+        festival.region.toLowerCase().includes(search.toLowerCase()) ||
+        festival.category.toLowerCase().includes(search.toLowerCase());
 
       const matchesCategory =
         category === "All" || festival.category === category;
 
-      const matchesMonth =
-        month === "All months" || festival.month === month;
-
-      const matchesSaved = !showSaved || saved.includes(festival.id);
-
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesMonth &&
-        matchesSaved
-      );
+      return matchesSearch && matchesCategory;
     });
-  }, [search, category, month, showSaved, saved]);
+  }, [search, category]);
 
-  const handleSubscribe = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const favoriteFestivals = festivals.filter((festival) =>
+    favorites.includes(festival.id)
+  );
 
-    if (!newsletterEmail.trim()) return;
+  function showDetails(festival: Festival) {
+    setSelected(festival);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-    setSubscribed(true);
-    setNewsletterEmail("");
-  };
+  function AuthScreen() {
+    return (
+      <section className="auth-section">
+        <div className="auth-card">
+          <div className="auth-symbol">✳</div>
+          <p className="eyebrow">WELCOME TO FESTORA</p>
+          <h1>{authMode === "login" ? "Welcome back." : "Join the celebration."}</h1>
+          <p className="auth-description">
+            {authMode === "login"
+              ? "Sign in to keep your favourite celebrations close."
+              : "Create your account and explore India's celebrations."}
+          </p>
 
-  const closeMobileMenu = () => setMobileMenu(false);
-
-  return (
-    <main className="festora">
-      {/* NAVBAR */}
-      <nav className="navbar">
-        <a href="#home" className="brand" onClick={closeMobileMenu}>
-          <span className="brand-icon">
-            <Sparkles size={19} />
-          </span>
-          FESTORA<span className="brand-dot">.</span>
-        </a>
-
-        <div className={`nav-links ${mobileMenu ? "nav-open" : ""}`}>
-          <a href="#festivals" onClick={closeMobileMenu}>
-            Festivals
-          </a>
-          <a href="#stories" onClick={closeMobileMenu}>
-            Stories
-          </a>
-          <a href="#culture" onClick={closeMobileMenu}>
-            Culture
-          </a>
-          <Link href="/calendar" onClick={closeMobileMenu}>
-            Calendar
-          </Link>
-          <a href="#about" onClick={closeMobileMenu}>
-            About
-          </a>
-        </div>
-
-        <div className="nav-actions">
-          <button
-            className={`saved-nav ${showSaved ? "active" : ""}`}
-            onClick={() => {
-              setShowSaved(!showSaved);
-              document.getElementById("festivals")?.scrollIntoView({
-                behavior: "smooth",
-              });
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setNotice(
+                "Authentication is not connected yet. Your account will work after backend integration."
+              );
             }}
           >
-            <Bookmark size={16} />
-            <span>Saved</span>
-            {saved.length > 0 && (
-              <span className="saved-count">{saved.length}</span>
+            {authMode === "signup" && (
+              <label>
+                Full name
+                <input type="text" placeholder="Your name" required />
+              </label>
             )}
-          </button>
 
-          <a href="#festivals" className="nav-cta">
-            Explore <ArrowUpRight size={16} />
-          </a>
-        </div>
+            <label>
+              Email address
+              <input type="email" placeholder="you@example.com" required />
+            </label>
 
-        <button
-          className="mobile-menu-button"
-          onClick={() => setMobileMenu(!mobileMenu)}
-          aria-label="Toggle navigation"
-        >
-          {mobileMenu ? <X /> : <Menu />}
-        </button>
-      </nav>
+            <label>
+              Password
+              <input
+                type="password"
+                placeholder="Enter your password"
+                minLength={6}
+                required
+              />
+            </label>
 
-      {/* HERO */}
-      <section className="hero" id="home">
-        <div className="hero-background" />
+            <button className="primary-button full-button" type="submit">
+              {authMode === "login" ? "Sign in" : "Create account"} →
+            </button>
+          </form>
 
-        <div className="hero-content">
-          <div className="eyebrow hero-eyebrow">
-            <span className="eyebrow-line" />
-            INDIA, IN ALL ITS COLORS
-            <span className="eyebrow-line" />
-          </div>
+          {notice && <p className="notice">{notice}</p>}
 
-          <h1>
-            Every festival.
-            <br />
-            <span>Every feeling.</span>
-          </h1>
-
-          <p className="hero-description">
-            Discover the celebrations, stories, and traditions
-            <br className="desktop-break" />
-            that bring India together.
+          <p className="auth-switch">
+            {authMode === "login" ? "New to Festora?" : "Already have an account?"}
+            <button
+              className="text-button"
+              onClick={() => {
+                setAuthMode(authMode === "login" ? "signup" : "login");
+                setNotice("");
+              }}
+            >
+              {authMode === "login" ? "Create an account" : "Sign in"}
+            </button>
           </p>
-
-          <div className="hero-buttons">
-            <a href="#festivals" className="button-primary">
-              Explore festivals <ArrowRight size={17} />
-            </a>
-            <a href="#stories" className="button-secondary">
-              Discover our stories
-            </a>
-          </div>
-
-          <div className="hero-bottom">
-            <div className="hero-note">
-              <span className="hero-note-dot" />
-              A JOURNEY THROUGH INDIAN CULTURE
-            </div>
-
-            <a href="#festivals" className="scroll-indicator">
-              SCROLL TO EXPLORE <ArrowDownRight size={17} />
-            </a>
-          </div>
-        </div>
-
-        <div className="hero-floating-card">
-          <div className="floating-icon">
-            <CalendarDays size={20} />
-          </div>
-          <div>
-            <p>YOUR FESTIVAL COMPANION</p>
-            <strong>Celebrate every moment.</strong>
-          </div>
+          <button className="back-link" onClick={() => navigate("home")}>
+            ← Back to home
+          </button>
         </div>
       </section>
+    );
+  }
 
-      {/* TICKER */}
-      <div className="ticker">
-        <div className="ticker-track">
-          {Array.from({ length: 2 }).map((_, index) => (
-            <div className="ticker-content" key={index}>
-              <span>DIWALI</span>
-              <Sparkles />
-              <span>HOLI</span>
-              <Sparkles />
-              <span>GANESH CHATURTHI</span>
-              <Sparkles />
-              <span>NAVRATRI</span>
-              <Sparkles />
-              <span>ONAM</span>
-              <Sparkles />
-              <span>PONGAL</span>
-              <Sparkles />
-            </div>
-          ))}
+  function FestivalCard({ festival }: { festival: Festival }) {
+    const isFavorite = favorites.includes(festival.id);
+
+    return (
+      <article className="festival-card">
+        <div className={`festival-art ${festival.color}`}>
+          <span className="festival-emoji">{festival.emoji}</span>
+          <button
+            className={`favorite-button ${isFavorite ? "is-favorite" : ""}`}
+            aria-label={isFavorite ? "Remove favorite" : "Add favorite"}
+            onClick={() => toggleFavorite(festival.id)}
+          >
+            {isFavorite ? "♥" : "♡"}
+          </button>
+          <span className="art-label">{festival.category}</span>
         </div>
-      </div>
-
-      {/* FESTIVAL DISCOVERY */}
-      <section className="section festivals-section" id="festivals">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> THE FESTIVAL COLLECTION
-            </div>
-            <h2>
-              Find your next
-              <br />
-              <span>celebration.</span>
-            </h2>
+        <div className="festival-card-content">
+          <p className="card-region">{festival.region}</p>
+          <h3>{festival.name}</h3>
+          <p className="card-description">{festival.description}</p>
+          <div className="card-bottom">
+            <span>◷ {festival.season}</span>
+            <button className="arrow-button" onClick={() => showDetails(festival)}>
+              Explore ↗
+            </button>
           </div>
+        </div>
+      </article>
+    );
+  }
 
-          <p className="section-description">
-            From ancient traditions to vibrant celebrations,
-            <br className="desktop-break" />
-            find the moments that make India extraordinary.
+  function FestivalGrid({ items }: { items: Festival[] }) {
+    if (items.length === 0) {
+      return (
+        <div className="empty-state">
+          <span>🔎</span>
+          <h3>No festivals found</h3>
+          <p>Try another search or category.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="festival-grid">
+        {items.map((festival) => (
+          <FestivalCard key={festival.id} festival={festival} />
+        ))}
+      </div>
+    );
+  }
+
+  function HomeScreen() {
+    return (
+      <>
+        <section className="hero">
+          <div className="hero-content">
+            <p className="eyebrow hero-eyebrow">A JOURNEY THROUGH INDIA</p>
+            <h1>
+              Every festival
+              <br />
+              has a <em>story.</em>
+            </h1>
+            <p className="hero-description">
+              Discover the colours, traditions and stories behind India's
+              incredible celebrations. One culture, a million ways to celebrate.
+            </p>
+            <div className="hero-actions">
+              <button className="primary-button" onClick={() => navigate("festivals")}>
+                Explore festivals <span>↗</span>
+              </button>
+              <button className="secondary-button" onClick={() => navigate("calendar")}>
+                View calendar
+              </button>
+            </div>
+            <div className="hero-note">
+              <span className="note-line" />
+              <span>CELEBRATE CULTURE. DISCOVER STORIES.</span>
+            </div>
+          </div>
+          <div className="hero-visual">
+            <div className="hero-circle hero-circle-one" />
+            <div className="hero-circle hero-circle-two" />
+            <div className="hero-art-card">
+              <span className="hero-art-top">INDIA · CULTURE · CELEBRATION</span>
+              <div className="hero-art-emoji">🪔</div>
+              <span className="hero-art-bottom">LIGHT · JOY · TOGETHERNESS</span>
+            </div>
+            <span className="floating-word floating-one">Tradition</span>
+            <span className="floating-word floating-two">Togetherness</span>
+            <span className="floating-star">✳</span>
+          </div>
+        </section>
+
+        <section className="intro-strip">
+          <p>MORE THAN A DATE ON THE CALENDAR.</p>
+          <p>IT'S A FEELING. IT'S A TRADITION. IT'S INDIA.</p>
+        </section>
+
+        <section className="section section-padding">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">THE CELEBRATIONS</p>
+              <h2>Find your <em>festival.</em></h2>
+              <p className="section-description">
+                From colourful streets to quiet rituals, discover celebrations
+                that bring people together.
+              </p>
+            </div>
+            <button className="outline-button" onClick={() => navigate("festivals")}>
+              View all festivals ↗
+            </button>
+          </div>
+          <FestivalGrid items={festivals.slice(0, 3)} />
+        </section>
+
+        <section className="story-section">
+          <div className="story-visual">
+            <div className="story-visual-inner">
+              <span>✳</span>
+              <strong>ONE COUNTRY.</strong>
+              <strong>COUNTLESS STORIES.</strong>
+              <small>THE SPIRIT OF INDIA</small>
+            </div>
+          </div>
+          <div className="story-copy">
+            <p className="eyebrow">THE FESTORA STORY</p>
+            <h2>Culture is meant to be <em>shared.</em></h2>
+            <p>
+              Every region has its own rhythm. Every celebration carries a
+              memory. Festora brings these stories together in one place so
+              you can discover, understand and celebrate India's cultural
+              richness.
+            </p>
+            <button className="text-arrow" onClick={() => navigate("festivals")}>
+              Discover the celebrations ↗
+            </button>
+          </div>
+        </section>
+
+        <section className="quote-section">
+          <span className="quote-mark">“</span>
+          <p>
+            Different traditions. Different stories.
+            <br />
+            One beautiful way of coming together.
           </p>
+          <span className="quote-caption">THE FESTORA PHILOSOPHY</span>
+        </section>
+
+        <section className="section section-padding">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">PLAN AHEAD</p>
+              <h2>Your year, full of <em>celebrations.</em></h2>
+              <p className="section-description">
+                Explore festivals by season and discover what's coming up.
+                Exact dates can vary by regional calendar.
+              </p>
+            </div>
+            <button className="outline-button" onClick={() => navigate("calendar")}>
+              Explore calendar ↗
+            </button>
+          </div>
+          <div className="season-grid">
+            {[
+              ["01", "Winter", "January – February", "🌾"],
+              ["02", "Spring", "March – April", "🎨"],
+              ["03", "Monsoon", "July – September", "🌼"],
+              ["04", "Autumn", "October – December", "🪔"],
+            ].map(([number, name, months, emoji]) => (
+              <button
+                className="season-card"
+                key={number}
+                onClick={() => navigate("calendar")}
+              >
+                <span className="season-number">{number}</span>
+                <span className="season-emoji">{emoji}</span>
+                <strong>{name}</strong>
+                <small>{months}</small>
+                <span className="season-arrow">↗</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="join-section">
+          <p className="eyebrow">BE PART OF THE CELEBRATION</p>
+          <h2>Keep culture close.</h2>
+          <p>Save the festivals you love and build your own celebration list.</p>
+          <button className="primary-button" onClick={() => navigate("signup")}>
+            Join Festora <span>↗</span>
+          </button>
+        </section>
+      </>
+    );
+  }
+
+  function FestivalsScreen() {
+    return (
+      <section className="page-section">
+        <div className="page-heading">
+          <p className="eyebrow">EXPLORE INDIA</p>
+          <h1>Every festival has a <em>story.</em></h1>
+          <p>Find celebrations by name, region or category.</p>
         </div>
 
-        <div className="festival-controls">
+        <div className="filter-panel">
           <div className="search-box">
-            <Search size={18} />
+            <span>⌕</span>
             <input
-              type="text"
-              placeholder="Search festivals, places..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search festivals or regions..."
             />
-            {search && (
-              <button onClick={() => setSearch("")} aria-label="Clear search">
-                <X size={15} />
-              </button>
-            )}
           </div>
-
-          <div className="filter-group">
+          <div className="category-list">
             {categories.map((item) => (
               <button
                 key={item}
-                className={`filter-chip ${category === item ? "selected" : ""}`}
+                className={`category-button ${category === item ? "active" : ""}`}
                 onClick={() => setCategory(item)}
               >
                 {item}
               </button>
             ))}
           </div>
-
-          <div className="month-select">
-            <CalendarDays size={16} />
-            <select
-              value={month}
-              onChange={(event) => setMonth(event.target.value)}
-              aria-label="Filter by month"
-            >
-              <option>All months</option>
-              {[
-                "January",
-                "March",
-                "August",
-                "September",
-                "October",
-                "November",
-              ].map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
-            <ChevronDown size={15} />
-          </div>
         </div>
 
-        {showSaved && (
-          <div className="saved-banner">
-            <Bookmark size={17} />
-            <span>
-              Showing your saved festivals ({saved.length})
-            </span>
-            <button onClick={() => setShowSaved(false)}>
-              View all festivals <X size={14} />
-            </button>
-          </div>
-        )}
+        <p className="results-count">
+          SHOWING {filteredFestivals.length} CELEBRATIONS
+        </p>
+        <FestivalGrid items={filteredFestivals} />
+      </section>
+    );
+  }
 
-        <div className="festival-grid">
-          {filteredFestivals.map((festival, index) => (
-            <article
-              className={`festival-card ${index === 0 ? "featured-card" : ""}`}
-              key={festival.id}
-            >
-              <div className="festival-image-wrap">
-                <img
-                  src={festival.image}
-                  alt={festival.name}
-                  className="festival-image"
-                />
+  function CalendarScreen() {
+    const seasons = [
+      {
+        title: "January – March",
+        subtitle: "Winter into spring",
+        items: festivals.filter((f) =>
+          ["January", "February", "March"].some((month) =>
+            f.season.includes(month)
+          )
+        ),
+      },
+      {
+        title: "April – June",
+        subtitle: "The summer celebrations",
+        items: festivals.filter((f) => f.season.includes("April")),
+      },
+      {
+        title: "July – September",
+        subtitle: "Monsoon celebrations",
+        items: festivals.filter((f) =>
+          ["July", "August", "September"].some((month) =>
+            f.season.includes(month)
+          )
+        ),
+      },
+      {
+        title: "October – December",
+        subtitle: "The festive season",
+        items: festivals.filter((f) =>
+          ["October", "November", "December"].some((month) =>
+            f.season.includes(month)
+          )
+        ),
+      },
+    ];
 
-                <span className="festival-tag">{festival.tag}</span>
+    return (
+      <section className="page-section">
+        <div className="page-heading">
+          <p className="eyebrow">PLAN YOUR CELEBRATIONS</p>
+          <h1>The festival <em>calendar.</em></h1>
+          <p>
+            Explore India's celebrations throughout the year, grouped by season.
+          </p>
+        </div>
 
-                <button
-                  className={`save-button ${
-                    saved.includes(festival.id) ? "is-saved" : ""
-                  }`}
-                  onClick={() => toggleSaved(festival.id)}
-                  aria-label={
-                    saved.includes(festival.id)
-                      ? "Remove from saved"
-                      : "Save festival"
-                  }
-                >
-                  <Heart
-                    size={18}
-                    fill={saved.includes(festival.id) ? "currentColor" : "none"}
-                  />
-                </button>
+        <div className="calendar-note">
+          <span>ⓘ</span>
+          Festival dates may change according to regional Panchang, lunar
+          calculations and local traditions. Confirm exact dates locally before
+          planning travel or events.
+        </div>
 
-                <div className="festival-date">
-                  <span>{festival.month.slice(0, 3).toUpperCase()}</span>
-                  <strong>{festival.date.split(" ")[1]}</strong>
+        <div className="calendar-list">
+          {seasons.map((season) => (
+            <div className="calendar-season" key={season.title}>
+              <div className="calendar-season-heading">
+                <div>
+                  <h2>{season.title}</h2>
+                  <p>{season.subtitle}</p>
                 </div>
+                <span>{String(season.items.length).padStart(2, "0")} FESTIVALS</span>
               </div>
 
-              <div className="festival-card-content">
-                <div className="festival-card-top">
-                  <span className="festival-category">
-                    {festival.category}
-                  </span>
-                  <span className="festival-duration">
-                    <Clock3 size={13} />
-                    {festival.duration}
-                  </span>
-                </div>
-
-                <h3>{festival.name}</h3>
-                <p className="festival-subtitle">{festival.subtitle}</p>
-
-                <div className="festival-card-bottom">
-                  <span className="festival-location">
-                    <Compass size={14} />
-                    {festival.location}
-                  </span>
-
-                 <Link
-  href={`/festivals/${festival.name.toLowerCase().replace(/\s+/g, "-")}`}
-  className="card-arrow"
-  aria-label={`Explore ${festival.name}`}
->
-  <ArrowUpRight size={18} />
-</Link>
-                </div>
-              </div>
-            </article>
+              {season.items.length === 0 ? (
+                <p className="no-season-items">
+                  No festival entries in this season yet.
+                </p>
+              ) : (
+                season.items.map((festival) => (
+                  <button
+                    className="calendar-item"
+                    key={festival.id}
+                    onClick={() => showDetails(festival)}
+                  >
+                    <span className="calendar-item-emoji">{festival.emoji}</span>
+                    <span className="calendar-item-name">
+                      <strong>{festival.name}</strong>
+                      <small>{festival.region}</small>
+                    </span>
+                    <span className="calendar-item-season">{festival.season}</span>
+                    <span className="calendar-item-arrow">↗</span>
+                  </button>
+                ))
+              )}
+            </div>
           ))}
         </div>
-
-        {filteredFestivals.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-icon">
-              <Search size={24} />
-            </div>
-            <h3>No festivals found</h3>
-            <p>Try a different search or clear your filters.</p>
-            <button
-              className="button-primary"
-              onClick={() => {
-                setSearch("");
-                setCategory("All");
-                setMonth("All months");
-                setShowSaved(false);
-              }}
-            >
-              Reset filters
-            </button>
-          </div>
-        )}
-
-        <div className="festival-footer">
-          <p>
-            Showing <strong>{filteredFestivals.length}</strong> of{" "}
-            <strong>{festivals.length}</strong> festivals
-          </p>
-          <span>Dates are illustrative and may vary by year.</span>
-        </div>
       </section>
+    );
+  }
 
-      {/* CULTURE */}
-      <section className="culture-section" id="culture">
-        <div className="culture-inner">
-          <div className="culture-image">
-            <img
-              src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1400&q=85"
-              alt="Traditional Indian celebration"
-            />
-            <div className="culture-image-label">
-              <span>INDIA</span>
-              <span>∞</span>
-              <span>CELEBRATIONS</span>
-            </div>
-          </div>
-
-          <div className="culture-content">
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> MORE THAN A FESTIVAL
-            </div>
-
-            <h2>
-              A culture that
-              <br />
-              <span>celebrates life.</span>
-            </h2>
-
-            <p>
-              Every celebration carries a piece of our identity.
-              Every ritual holds a story. Every gathering creates
-              a memory that lasts a lifetime.
-            </p>
-
-            <p>
-              FESTORA brings these moments closer, helping you
-              discover the meaning, beauty, and traditions behind
-              India's incredible festivals.
-            </p>
-
-            <a href="#stories" className="text-link">
-              Explore our stories <ArrowRight size={17} />
-            </a>
-
-            <div className="culture-stats">
-              <div>
-                <strong>100+</strong>
-                <span>Traditions to discover</span>
-              </div>
-              <div>
-                <strong>28</strong>
-                <span>States, endless cultures</span>
-              </div>
-              <div>
-                <strong>1</strong>
-                <span>Incredible India</span>
-              </div>
-            </div>
-          </div>
+  function DashboardScreen() {
+    return (
+      <section className="page-section">
+        <div className="page-heading">
+          <p className="eyebrow">YOUR FESTORA</p>
+          <h1>Your celebration <em>space.</em></h1>
+          <p>Your saved festivals are stored locally in this browser.</p>
         </div>
-      </section>
 
-      {/* STORIES */}
-      <section className="section stories-section" id="stories">
-        <div className="section-heading">
+        <div className="dashboard-summary">
           <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> STORIES THAT MATTER
-            </div>
-            <h2>
-              Beyond the
-              <br />
-              <span>celebration.</span>
-            </h2>
+            <span>♡</span>
+            <strong>{favorites.length}</strong>
+            <small>Saved festivals</small>
           </div>
-
-          <a href="#about" className="text-link stories-link">
-            Discover FESTORA <ArrowRight size={17} />
-          </a>
+          <div>
+            <span>✳</span>
+            <strong>{festivals.length}</strong>
+            <small>Explore festivals</small>
+          </div>
         </div>
 
-        <div className="stories-grid">
-          {stories.map((story) => (
-            <article className="story-card" key={story.number}>
-              <div className="story-image-wrap">
-                <img src={story.image} alt={story.title} />
-                <span className="story-number">{story.number}</span>
-                <span className="story-category">{story.category}</span>
-              </div>
+        <div className="section-heading dashboard-heading">
+          <div>
+            <p className="eyebrow">YOUR COLLECTION</p>
+            <h2>Saved <em>festivals.</em></h2>
+          </div>
+          <button className="outline-button" onClick={() => navigate("festivals")}>
+            Discover more ↗
+          </button>
+        </div>
 
-              <div className="story-content">
-                <h3>{story.title}</h3>
-                <p>{story.text}</p>
-                <a href="#about" className="story-read-link">
-                  Read the story <ArrowUpRight size={16} />
-                </a>
-              </div>
-            </article>
+        <FestivalGrid items={favoriteFestivals} />
+
+        <div className="backend-note">
+          <strong>Account features coming with backend integration</strong>
+          <p>
+            Secure login, cloud-synced favourites and personal profile data
+            will be connected after the database and authentication setup.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  function AdminScreen() {
+    return (
+      <section className="page-section">
+        <div className="page-heading">
+          <p className="eyebrow">FESTORA MANAGEMENT</p>
+          <h1>Admin <em>dashboard.</em></h1>
+          <p>Frontend preview of the festival management area.</p>
+        </div>
+
+        <div className="admin-warning">
+          <strong>Backend not connected</strong>
+          <p>
+            This is a visual preview only. Admin access, permissions, publishing
+            and database changes must be secured on the server before deployment.
+          </p>
+        </div>
+
+        <div className="dashboard-summary">
+          <div><span>✳</span><strong>{festivals.length}</strong><small>Festival entries</small></div>
+          <div><span>♡</span><strong>{favorites.length}</strong><small>Local favourites</small></div>
+          <div><span>◷</span><strong>—</strong><small>Published events</small></div>
+        </div>
+
+        <div className="admin-table-wrap">
+          <div className="admin-table-heading">
+            <h2>Festival entries</h2>
+            <span>PREVIEW DATA</span>
+          </div>
+          {festivals.map((festival) => (
+            <div className="admin-row" key={festival.id}>
+              <span>{festival.emoji}</span>
+              <strong>{festival.name}</strong>
+              <small>{festival.region}</small>
+              <span className="status-label">Sample content</span>
+            </div>
           ))}
         </div>
       </section>
+    );
+  }
 
-      {/* MUSIC */}
-      <section className="music-section">
-        <div className="music-decoration music-decoration-one" />
-        <div className="music-decoration music-decoration-two" />
+  function DetailScreen() {
+    if (!selected) return null;
 
-        <div className="music-content">
-          <div className="eyebrow music-eyebrow">
-            <Music2 size={15} /> THE SOUND OF CELEBRATION
-          </div>
+    return (
+      <section className="detail-section">
+        <button className="back-link" onClick={() => navigate("festivals")}>
+          ← Back to festivals
+        </button>
 
-          <h2>
-            Feel the rhythm
-            <br />
-            <span>of India.</span>
-          </h2>
-
-          <p>
-            From the beats of Dhol to the melodies of folk music,
-            every festival has its own soundtrack.
-          </p>
-
-          <a href="#festivals" className="button-light">
-            Explore celebrations <ArrowRight size={17} />
-          </a>
+        <div className={`detail-art ${selected.color}`}>
+          <span>{selected.emoji}</span>
+          <small>DISCOVER THE CELEBRATION</small>
         </div>
 
-        <div className="music-visual">
-          <div className="music-circle music-circle-large">
-            <div className="music-circle music-circle-middle">
-              <div className="music-circle music-circle-small">
-                <Music2 size={40} />
-              </div>
-            </div>
+        <div className="detail-content">
+          <p className="eyebrow">{selected.category} · {selected.region}</p>
+          <h1>{selected.name}</h1>
+          <p className="detail-season">◷ {selected.season}</p>
+          <p className="detail-description">{selected.description}</p>
+
+          <h2>Traditions and highlights</h2>
+          <div className="tradition-list">
+            {selected.traditions.map((tradition) => (
+              <span key={tradition}>✳ {tradition}</span>
+            ))}
           </div>
 
-          <div className="music-floating music-floating-top">
-            <span>♪</span> Folk
-          </div>
-          <div className="music-floating music-floating-bottom">
-            <span>♫</span> Celebration
-          </div>
-        </div>
-      </section>
-
-      {/* NEWSLETTER */}
-      <section className="newsletter-section" id="about">
-        <div className="newsletter-inner">
-          <div className="newsletter-icon">
-            <Sparkles size={23} />
-          </div>
-
-          <div className="newsletter-text">
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> STAY IN THE CELEBRATION
-            </div>
-            <h2>
-              Never miss a <span>festive moment.</span>
-            </h2>
-            <p>
-              Get festival dates, cultural stories, and inspiration
-              delivered to your inbox.
-            </p>
-          </div>
-
-          <form className="newsletter-form" onSubmit={handleSubscribe}>
-            {subscribed ? (
-              <div className="subscribe-success">
-                <Check size={18} />
-                You're on the list!
-              </div>
-            ) : (
-              <>
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  value={newsletterEmail}
-                  onChange={(event) =>
-                    setNewsletterEmail(event.target.value)
-                  }
-                  required
-                />
-                <button type="submit" aria-label="Subscribe">
-                  Join us <ArrowRight size={17} />
-                </button>
-              </>
-            )}
-          </form>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-top">
-          <div className="footer-brand-area">
-            <a href="#home" className="brand footer-brand">
-              <span className="brand-icon">
-                <Sparkles size={19} />
-              </span>
-              FESTORA<span className="brand-dot">.</span>
-            </a>
-            <p>
-              Celebrating the colors, culture,
-              <br />
-              and spirit of India.
-            </p>
-          </div>
-
-          <div className="footer-column">
-            <h4>EXPLORE</h4>
-            <a href="#festivals">Festivals</a>
-            <a href="#stories">Stories</a>
-            <a href="#culture">Culture</a>
-          </div>
-
-          <div className="footer-column">
-            <h4>DISCOVER</h4>
-            <Link href="/calendar">Festival calendar</Link>
-            <a href="#culture">Traditions</a>
-            <a href="#stories">Food & stories</a>
-          </div>
-
-          <div className="footer-column">
-            <h4>FESTORA</h4>
-            <a href="#about">Our story</a>
-            <a href="#about">Newsletter</a>
-            <a href="#home">Back to top ↑</a>
-            
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 FESTORA. Made with love for India.</span>
-          <span>CELEBRATE CULTURE. CELEBRATE LIFE.</span>
-        </div>
-      </footer>
-
-      {/* FESTIVAL DETAIL MODAL */}
-      {selectedFestival && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedFestival(null)}
-        >
-          <div
-            className="festival-modal"
-            onClick={(event) => event.stopPropagation()}
+          <button
+            className="primary-button"
+            onClick={() => toggleFavorite(selected.id)}
           >
-            <button
-              className="modal-close"
-              onClick={() => setSelectedFestival(null)}
-              aria-label="Close modal"
-            >
-              <X size={20} />
-            </button>
+            {favorites.includes(selected.id) ? "♥ Saved to favourites" : "♡ Save festival"}
+          </button>
 
-            <div className="modal-image">
-              <img
-                src={selectedFestival.image}
-                alt={selectedFestival.name}
-              />
-              <span className="modal-image-tag">
-                {selectedFestival.tag}
-              </span>
-            </div>
-
-            <div className="modal-content">
-              <div className="eyebrow">
-                <span className="eyebrow-line" />{" "}
-                {selectedFestival.category.toUpperCase()}
-              </div>
-
-              <h2>{selectedFestival.name}</h2>
-              <h3>{selectedFestival.subtitle}</h3>
-
-              <p>{selectedFestival.description}</p>
-
-              <div className="modal-details">
-                <div>
-                  <CalendarDays size={18} />
-                  <span>
-                    <small>DATE</small>
-                    <strong>{selectedFestival.date}</strong>
-                  </span>
-                </div>
-                <div>
-                  <Compass size={18} />
-                  <span>
-                    <small>LOCATION</small>
-                    <strong>{selectedFestival.location}</strong>
-                  </span>
-                </div>
-                <div>
-                  <Clock3 size={18} />
-                  <span>
-                    <small>DURATION</small>
-                    <strong>{selectedFestival.duration}</strong>
-                  </span>
-                </div>
-              </div>
-
-              <button
-                className="button-primary modal-save"
-                onClick={() => toggleSaved(selectedFestival.id)}
-              >
-                <Heart
-                  size={17}
-                  fill={
-                    saved.includes(selectedFestival.id)
-                      ? "currentColor"
-                      : "none"
-                  }
-                />
-                {saved.includes(selectedFestival.id)
-                  ? "Remove from saved"
-                  : "Save this festival"}
-              </button>
-            </div>
-          </div>
+          <p className="detail-disclaimer">
+            Festival timing and customs may vary by region. Check local sources
+            for exact dates and event details.
+          </p>
         </div>
+      </section>
+    );
+  }
+
+  return (
+    <main>
+      <header className="site-header">
+        <button className="brand" onClick={() => navigate("home")}>
+          <span className="brand-mark">✳</span>
+          <span>FESTORA<small>EVERY FESTIVAL HAS A STORY</small></span>
+        </button>
+
+        <button
+          className="mobile-menu-button"
+          onClick={() => setMobileMenu(!mobileMenu)}
+          aria-label="Toggle menu"
+        >
+          {mobileMenu ? "✕" : "☰"}
+        </button>
+
+        <nav className={mobileMenu ? "nav-links nav-open" : "nav-links"}>
+          <button className={view === "home" ? "nav-active" : ""} onClick={() => navigate("home")}>Home</button>
+          <button className={view === "festivals" ? "nav-active" : ""} onClick={() => navigate("festivals")}>Festivals</button>
+          <button className={view === "calendar" ? "nav-active" : ""} onClick={() => navigate("calendar")}>Calendar</button>
+          <button className={view === "dashboard" ? "nav-active" : ""} onClick={() => navigate("dashboard")}>My Space</button>
+        </nav>
+
+        <div className="header-actions">
+          <button className="login-button" onClick={() => { setAuthMode("login"); navigate("login"); }}>
+            Log in
+          </button>
+          <button className="header-cta" onClick={() => { setAuthMode("signup"); navigate("signup"); }}>
+            Get started ↗
+          </button>
+        </div>
+      </header>
+
+      {selected ? (
+        <DetailScreen />
+      ) : view === "home" ? (
+        <HomeScreen />
+      ) : view === "festivals" ? (
+        <FestivalsScreen />
+      ) : view === "calendar" ? (
+        <CalendarScreen />
+      ) : view === "login" || view === "signup" ? (
+        <AuthScreen />
+      ) : view === "dashboard" ? (
+        <DashboardScreen />
+      ) : (
+        <AdminScreen />
       )}
 
-      {/* BACK TO TOP */}
-      <a href="#home" className="back-to-top" aria-label="Back to top">
-        <ChevronLeft size={19} />
-      </a>
+      <footer className="site-footer">
+        <div className="footer-main">
+          <div className="footer-brand">
+            <button className="brand footer-logo" onClick={() => navigate("home")}>
+              <span className="brand-mark">✳</span>
+              <span>FESTORA<small>EVERY FESTIVAL HAS A STORY</small></span>
+            </button>
+            <p>Celebrating the stories, traditions and colours of India.</p>
+          </div>
+
+          <div className="footer-column">
+            <strong>EXPLORE</strong>
+            <button onClick={() => navigate("festivals")}>Festivals</button>
+            <button onClick={() => navigate("calendar")}>Calendar</button>
+            <button onClick={() => navigate("dashboard")}>My Space</button>
+          </div>
+
+          <div className="footer-column">
+            <strong>ACCOUNT</strong>
+            <button onClick={() => { setAuthMode("login"); navigate("login"); }}>Log in</button>
+            <button onClick={() => { setAuthMode("signup"); navigate("signup"); }}>Sign up</button>
+            <button onClick={() => navigate("admin")}>Admin preview</button>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© FESTORA. Made with culture and care.</span>
+          <span>INDIA · CULTURE · CELEBRATION</span>
+        </div>
+      </footer>
     </main>
   );
 }
